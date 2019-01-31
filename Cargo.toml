@@ -1,0 +1,5 @@
+[package]
+name = "fizzbuzz"
+version = "1.0.0"
+authors = ["kornholio"]
+edition = "2018"
