@@ -23,7 +23,8 @@ fn handle_arguments(args: Vec<String>) -> (u32, u32, usize) {
     let arg_u32_conv = |argument: &String| argument.parse::<u32>().unwrap();
     let arg_usize_conv = |argument: &String| argument.parse::<usize>().unwrap();
 
-    return match args.len() {
+    match args.len() {
+        x if x > 4 => panic!("Too many arguments provided - give start, end, step or less"),
         2 => (START, arg_u32_conv(&args[1]), STEP),
         3 => (arg_u32_conv(&args[1]), arg_u32_conv(&args[2]), STEP),
         4 => (arg_u32_conv(&args[1]), arg_u32_conv(&args[2]), arg_usize_conv(&args[3])),
@@ -39,24 +40,21 @@ fn out_fizz_buzz(fb: Fb) {
 }
 
 fn fizzbuzz(nr: u32) -> Fb {
-    let result: Fb;
-    if nr == 0 {
-        result = Fb::Num(0);
-    } else if nr % 3 == 0 && nr % 5 == 0 {
-        result = Fb::Fizzbuzz;
-    } else if nr % 3 == 0 {
-        result = Fb::Fizz;
-    } else if nr % 5 == 0 {
-        result = Fb::Buzz;
-    } else {
-        result = Fb::Num(nr);
+    let is_fizz = |argument: u32| argument % 3 == 0;
+    let is_buzz = |argument: u32| argument % 5 == 0;
+    let is_fizz_buzz = |argument: u32| is_fizz(argument) && is_buzz(argument);
+
+    match nr {
+        0 => Fb::Num(nr),
+        x if is_fizz_buzz(x) => Fb::Fizzbuzz,
+        x if is_fizz(x) => Fb::Fizz,
+        x if is_buzz(x) => Fb::Buzz,
+        _ => Fb::Num(nr)
     }
-    result
 }
 
 #[cfg(test)]
 mod tests {
-    // Note this useful idiom: importing names from outer (for mod tests) scope.
     use super::{fizzbuzz, Fb};
 
     #[test]
