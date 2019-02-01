@@ -1,5 +1,5 @@
 [package]
 name = "fizzbuzz"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["kornholio"]
 edition = "2018"

@@ -3,17 +3,15 @@ enum Fb {
     Fizz,
     Buzz,
     Fizzbuzz,
-    Num(u32)
+    Num(u32),
 }
 
-use std::env;
-
-const START:u32 = 0;
-const END:u32 = 100;
-const STEP:usize = 7;
+const START: u32 = 0;
+const END: u32 = 100;
+const STEP: usize = 1;
 
 fn main() {
-    let (start, end, step) = handle_arguments();
+    let (start, end, step) = handle_arguments(std::env::args().collect());
 
     for i in (start..end).step_by(step) {
         print!("{}: ", i);
@@ -22,37 +20,25 @@ fn main() {
 }
 
 fn handle_arguments(args: Vec<String>) -> (u32, u32, usize) {
-// Prints each argument on a separate line
-    if args.len() > 1 {
-        let arg_u32_conv = |argument: &String| {
-            argument.parse::<u32>().unwrap()
-        };
-        let arg_usize_conv = |argument: &String| {
-            argument.parse::<usize>().unwrap()
-        };
+    let arg_u32_conv = |argument: &String| argument.parse::<u32>().unwrap();
+    let arg_usize_conv = |argument: &String| argument.parse::<usize>().unwrap();
 
-        if args.len() == 2 {
-            (START, arg_u32_conv(&args[1]), STEP)
-        } else if args.len() == 3 {
-            (arg_u32_conv(&args[1]), arg_u32_conv(&args[2]), STEP)
-        } else if args.len() == 4 {
-            (arg_u32_conv(&args[1]), arg_u32_conv(&args[2]), arg_usize_conv(&args[3]))
-        } else {
-            (START, END, STEP)
-        }
-    } else {
-        (START, END, STEP)
-    }
+    return match args.len() {
+        2 => (START, arg_u32_conv(&args[1]), STEP),
+        3 => (arg_u32_conv(&args[1]), arg_u32_conv(&args[2]), STEP),
+        4 => (arg_u32_conv(&args[1]), arg_u32_conv(&args[2]), arg_usize_conv(&args[3])),
+        _ => (START, END, STEP)
+    } 
 }
 
-fn out_fizz_buzz(fb : Fb) {
+fn out_fizz_buzz(fb: Fb) {
     match fb {
         Fb::Num(val) => println!("{}", val),
-        _ => println!("{:?}", fb)
+        _ => println!("{:?}", fb),
     }
 }
 
-fn fizzbuzz (nr : u32) -> Fb {
+fn fizzbuzz(nr: u32) -> Fb {
     let result: Fb;
     if nr == 0 {
         result = Fb::Num(0);
